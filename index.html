@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Anona Digital Invoice(Made by Amjad)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding: 30px;
+    }
+
+    .invoice-box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      position: relative;
+      min-height: auto;
+    }
+
+    .logo {
+      width: 160px;
+      margin-bottom: 15px;
+    }
+
+    .serial-container {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .serial {
+      color: red;
+      font-weight: bold;
+      background: transparent;
+      border: none;
+      font-size: 1.1rem;
+      min-width: 120px;
+    }
+
+    .note-box {
+      border: 1px solid #e0e0e0;
+      padding: 12px;
+      min-height: 80px;
+      width: 100%;
+      resize: none;
+      font-family: inherit;
+      border-radius: 4px;
+    }
+
+    table input {
+      border: none;
+      width: 100%;
+      padding: 5px;
+      font-family: inherit;
+    }
+
+    .form-control:focus {
+      box-shadow: none;
+      border-color: #ced4da;
+    }
+
+    .signature-box {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      gap: 20px;
+    }
+
+    .signature-container {
+      width: 45%;
+      text-align: center;
+    }
+
+    .signature-img {
+      max-height: 60px;
+      margin-bottom: 5px;
+      max-width: 100%;
+    }
+
+    .signature-label {
+      border-top: 1px solid #333;
+      padding-top: 5px;
+      font-size: 0.95rem;
+      margin-top: 10px;
+    }
+
+    table th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+    }
+
+    .total-row {
+      background-color: #f8f9fa !important;
+    }
+
+    .note-area {
+      font-size: 0.85rem;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      margin-top: 20px;
+    }
+
+    .no-border {
+      border: none !important;
+      background: transparent !important;
+    }
+    /* for page breaking */
+    .page-break {
+     page-break-before: always;
+     break-before: always;
+    }
+/* end */
+
+    @media print {
+      #addRowBtn, #downloadBtn, .removeRowBtn, .action-col, .signature-btn {
+        display: none !important;
+      }
+      .serial {
+        border: none !important;
+      }
+      .invoice-box {
+        box-shadow: none;
+        padding: 0;
+        min-height: auto;
+      }
+      body {
+        padding: 0;
+        background: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Signature Modal -->
+<div class="modal fade" id="signatureModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Supervisor Signature</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="height: 300px; padding: 0;">
+        <div class="position-relative h-100">
+          <canvas id="signatureCanvas" style="width: 100%; height: 100%; background-color: #f8f8f8;"></canvas>
+          <button class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2" id="clearSignature">Clear</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="retrySignature">Retry</button>
+        <button class="btn btn-primary" id="confirmSignature">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="invoice-box elegant-text" id="invoiceContent">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+      <img src="logo.png" class="logo">
+      <div class="serial-container"><strong>No:</strong> <input type="text" class="serial" placeholder="INV-001" id="serialField"></div>
+    </div>
+    <textarea class="note-box" placeholder="Customer message..."></textarea>
+  </div>
+
+  <!-- Invoice Info -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h5><span class="badge bg-dark">CASH INVOICE</span></h5>
+    <div class="d-flex align-items-center gap-2">
+      <strong>Date:</strong>
+      <input type="text" id="invoiceDate" class="form-control form-control-sm w-auto" placeholder="DD-MM-YYYY">
+    </div>
+  </div>
+
+  <!-- Customer Info -->
+  <div class="mb-3">
+    <label><strong>Mr./Mrs:</strong></label>
+    <input type="text" class="form-control form-control-sm" placeholder="Customer name" id="customerName">
+  </div>
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <label><strong>Mobile No:</strong></label>
+      <input type="text" class="form-control form-control-sm" placeholder="Mobile number">
+    </div>
+    <div class="col-md-6">
+      <label><strong>Villa No:</strong></label>
+      <input type="text" class="form-control form-control-sm" placeholder="Villa number">
+    </div>
+  </div>
+
+  <!-- Invoice Table -->
+  <table class="table table-sm" id="invoiceTable">
+    <thead>
+      <tr>
+        <th>Vehicle No</th>
+        <th>Washing Days</th>
+        <th>Amount</th>
+        <th class="action-col">Action</th>
+      </tr>
+    </thead>
+    <tbody id="invoiceBody">
+      <tr>
+        <td><input type="text" placeholder="type"></td>
+        <td><input type="text" placeholder="29thJanuary - 18thApril"></td>
+        <td><input type="number" class="row-total" value="0"></td>
+        <td class="action-col"><button class="btn btn-danger btn-sm removeRowBtn">Delete</button></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr class="fw-bold total-row">
+        <td colspan="2" class="text-end">TOTAL</td>
+        <td><input type="text" id="grandTotal" class="form-control form-control-sm no-border" readonly></td>
+        <td class="action-col"></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <!-- Buttons -->
+  <div class="d-flex justify-content-between mt-4">
+    <button class="btn btn-primary btn-sm" id="addRowBtn">Add Row</button>
+    <button class="btn btn-success btn-sm signature-btn" id="downloadBtn">Download PDF</button>
+  </div>
+
+  <!-- Signatures -->
+  <div class="signature-box">
+    <div class="signature-container" id="supervisorSignature">
+      <div class="signature-label">Supervisor Signature</div>
+    </div>
+    <div class="signature-container">
+      <div class="signature-label">Thank you</div>
+    </div>
+  </div>
+
+  <!-- page breakstartaa -->
+  <div class="page-break"></div>
+  <div class="html2pdf__page-break"></div>
+
+<!-- enda -->
+
+  <!-- Note -->
+  <div class="note-area"><strong>NB:</strong> Vehicle interior cleaning should be done in customer's own risk and presence.</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  let signaturePad = null;
+  const canvas = document.getElementById("signatureCanvas");
+  const signatureModal = new bootstrap.Modal(document.getElementById("signatureModal"));
+
+  flatpickr("#invoiceDate", {
+    dateFormat: "d-m-Y",
+    defaultDate: new Date()
+  });
+
+  function calculateTotals() {
+    let total = 0;
+    document.querySelectorAll(".row-total").forEach(input => {
+      total += parseFloat(input.value) || 0;
+    });
+    document.getElementById("grandTotal").value = total.toFixed(2);
+  }
+
+  function addRow() {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td><input type="text" placeholder="Vehicle No"></td>
+      <td><input type="text" placeholder="Washing Days"></td>
+      <td><input type="number" class="row-total" value="0"></td>
+      <td class="action-col"><button class="btn btn-danger btn-sm removeRowBtn">Delete</button></td>
+    `;
+    document.getElementById("invoiceBody").appendChild(row);
+    updateEvents();
+    calculateTotals();
+  }
+
+  function removeRow(btn) {
+    btn.closest("tr").remove();
+    calculateTotals();
+  }
+
+  function updateEvents() {
+    document.querySelectorAll(".row-total").forEach(input => {
+      input.removeEventListener("input", calculateTotals);
+      input.addEventListener("input", calculateTotals);
+    });
+
+    document.querySelectorAll(".removeRowBtn").forEach(btn => {
+      btn.removeEventListener("click", () => removeRow(btn));
+      btn.addEventListener("click", function() {
+        removeRow(this);
+      });
+    });
+  }
+
+  document.getElementById('signatureModal').addEventListener('shown.bs.modal', function () {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    if (!signaturePad) {
+      signaturePad = new SignaturePad(canvas, {
+        backgroundColor: 'rgb(255,255,255)',
+        penColor: 'rgb(0,0,0)'
+      });
+    } else {
+      signaturePad.clear();
+    }
+  });
+
+  document.getElementById("confirmSignature").addEventListener("click", function() {
+    if (signaturePad.isEmpty()) {
+      alert("Please provide a signature first");
+      return;
+    }
+
+    const signatureData = signaturePad.toDataURL();
+    const img = document.createElement("img");
+    img.src = signatureData;
+    img.className = "signature-img";
+
+    const signatureDiv = document.getElementById("supervisorSignature");
+    signatureDiv.innerHTML = "";
+    signatureDiv.appendChild(img);
+
+    const label = document.createElement("div");
+    label.textContent = "Supervisor Signature";
+    label.className = "signature-label";
+    signatureDiv.appendChild(label);
+
+    signatureModal.hide();
+    generateFinalPDF();
+  });
+
+  document.getElementById("retrySignature").addEventListener("click", () => signaturePad.clear());
+  document.getElementById("clearSignature").addEventListener("click", () => signaturePad.clear());
+
+  document.getElementById("addRowBtn").addEventListener("click", addRow);
+  document.getElementById("downloadBtn").addEventListener("click", () => signatureModal.show());
+
+  // function generateFinalPDF() {
+  //   const content = document.getElementById("invoiceContent");
+  //   const clone = content.cloneNode(true);
+
+  //   // Clean up dynamic elements
+  //   clone.querySelectorAll(".action-col, .removeRowBtn, #addRowBtn, #downloadBtn, .signature-btn").forEach(el => el.remove());
+
+  //   // Style inputs for PDF
+  //   clone.querySelectorAll("input, textarea").forEach(input => {
+  //     input.classList.add("no-border");
+  //     input.readOnly = true;
+  //   });
+
+  //   // Reset unnecessary margins
+  //   clone.querySelector(".invoice-box")?.style?.setProperty("min-height", "auto");
+
+  //   const opt = {
+  //     margin: 10,
+  //     filename: `Anona_Invoice_${(document.getElementById("customerName").value || "Customer").replace(/\s+/g, '_')}.pdf`,
+  //     html2canvas: {
+  //       scale: 2,
+  //       useCORS: true
+  //     },
+  //     jsPDF: {
+  //       unit: 'mm',
+  //       format: 'a4',
+  //       orientation: 'portrait'
+  //     },
+  //     pagebreak: { mode: ['avoid-all', 'css'] }
+  //   };
+
+  //   html2pdf().set(opt).from(clone).save();
+  // }
+  function generateFinalPDF() {
+  const content = document.getElementById("invoiceContent");
+  const clone = content.cloneNode(true);
+
+  // Clean up dynamic elements
+  clone.querySelectorAll(".action-col, .removeRowBtn, #addRowBtn, #downloadBtn, .signature-btn").forEach(el => el.remove());
+
+  // Style inputs for PDF
+  clone.querySelectorAll("input, textarea").forEach(input => {
+    input.classList.add("no-border");
+    input.readOnly = true;
+  });
+
+  // Reset unnecessary margins
+  clone.querySelector(".invoice-box")?.style?.setProperty("min-height", "auto");
+
+  const opt = {
+    margin: 10,
+    filename: `Anona_Invoice_${(document.getElementById("customerName").value || "Customer").replace(/\s+/g, '_')}.pdf`,
+    html2canvas: {
+      scale: 2,
+      useCORS: true
+    },
+    jsPDF: {
+      unit: 'mm',
+      format: 'a4',
+      orientation: 'portrait'
+    },
+    pagebreak: { mode: ['avoid-all', 'css'] }
+  };
+
+  html2pdf().set(opt).from(clone).save();
+}
+
+
+  updateEvents();
+  calculateTotals();
+</script>
+
+</body>
+</html>
