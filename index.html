@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Anona Digital Invoice(Made by Amjad)</title>
+  <title>Anona Digital Invoice (Made by Amjad)</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
@@ -13,7 +13,6 @@
       background-color: #f8f9fa;
       padding: 30px;
     }
-
     .invoice-box {
       background: white;
       padding: 30px;
@@ -21,30 +20,104 @@
       max-width: 800px;
       margin: auto;
       box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      position: relative;
-      min-height: auto;
     }
+    .pdf-export {
+  font-family: Arial, Helvetica, sans-serif !important;
+  background: #fff !important;
+  color: #222 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  /* Change this: */
+  /* padding: 20mm !important; */
+  /* To something like this: */
+  padding: 10mm 10mm 12mm 10mm !important;
+  width: 210mm !important;
+  min-height: 2mm !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+}
+
+
+    .pdf-export .logo { width: 220px !important; margin-bottom: 10px !important; }
+    .pdf-export table { border-collapse: collapse !important; width: 100% !important; margin-bottom: 8mm !important; }
+    .pdf-export th, .pdf-export td { border: 1px solid #bbb !important; padding: 6px 4px !important; font-size: 13px !important; }
+    .pdf-export th { background: #f2f2f2 !important; font-weight: 700 !important; }
+    .pdf-export .total-row td { background: #f6f6f6 !important; font-weight: bold !important; }
+    .pdf-export .signature-img { max-width: 150px !important; max-height: 60px !important; display: block; margin: 0 0 5px auto !important; }
+    .pdf-export .signature-label {
+      width: 220px !important;
+      margin: 0 0 0 auto !important;
+      border-top: 1px solid #333 !important;
+      padding-top: 3px !important;
+      font-size: 12px !important;
+      margin-top: 3px !important;
+      text-align: right !important;
+      display: block !important;
+    }
+    .pdf-export .signature-container.signature-right {
+      text-align: right !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-end !important;
+      justify-content: flex-end !important;
+      width: 100% !important;
+      min-width: 220px !important;
+    }
+    .pdf-export .dates-col {
+      width: 100%;
+      margin-bottom: 0 !important;
+    }
+    .pdf-export .date-row {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      margin-bottom: 8px !important;
+    }
+    .pdf-export .date-row label {
+      margin-right: 10px !important;
+      font-weight: bold !important;
+      white-space: nowrap !important;
+    }
+    .pdf-export .date-row input {
+      max-width: 220px !important;
+      min-width: 120px !important;
+      min-height: 36px !important;
+      height: 36px !important;
+      border: 1.5px solid #bbb !important;
+      border-radius: 6px !important;
+      background: #fff !important;
+      color: #222 !important;
+      font-size: 1.1em !important;
+      padding: 4px 12px !important;
+      box-sizing: border-box !important;
+      display: inline-block !important;
+    }
+    .pdf-export .signature-box {
+      display: flex !important;
+      flex-direction: row !important;
+      justify-content: space-between !important;
+      align-items: flex-end !important;
+      gap: 20px !important;
+      margin-top: 40px !important;
+      margin-bottom: 20px !important;
+      width: 100% !important;
+    }
+    .pdf-export .note-area { margin-top: 16px !important; border-top: 1px solid #ddd !important; padding-top: 10px !important; font-size: 12px !important; color: #444 !important; }
+    .pdf-export .non-print { display: none !important; }
 
     .logo {
-      width: 160px;
+      width: 200px;
       margin-bottom: 15px;
     }
-
-    .serial-container {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .serial {
-      color: red;
-      font-weight: bold;
-      background: transparent;
+    .serial, .form-inline-field {
       border: none;
-      font-size: 1.1rem;
+      background: transparent;
+      font-size: 1rem;
       min-width: 120px;
+      color: red;
+      font-weight: bolder;
     }
-
     .note-box {
       border: 1px solid #e0e0e0;
       padding: 12px;
@@ -54,89 +127,120 @@
       font-family: inherit;
       border-radius: 4px;
     }
-
     table input {
       border: none;
       width: 100%;
       padding: 5px;
       font-family: inherit;
     }
-
     .form-control:focus {
       box-shadow: none;
       border-color: #ced4da;
     }
-
     .signature-box {
       display: flex;
       justify-content: space-between;
       margin-top: 40px;
       margin-bottom: 20px;
       gap: 20px;
+      width: 100%;
+      align-items: flex-end;
     }
-
+    .dates-col {
+      flex: 1 1 0%;
+      margin-bottom: 0;
+    }
+    .date-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .date-row label {
+      margin-right: 10px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    .date-row input {
+      max-width: 220px;
+      min-width: 120px;
+      min-height: 36px;
+      height: 36px;
+      border: 1.5px solid #bbb;
+      border-radius: 6px;
+      background: #fff;
+      color: #222;
+      font-size: 1.1em;
+      padding: 4px 12px;
+      box-sizing: border-box;
+      display: inline-block;
+    }
     .signature-container {
-      width: 45%;
-      text-align: center;
+      width: 300px;
+      text-align: right;
     }
-
     .signature-img {
       max-height: 60px;
       margin-bottom: 5px;
       max-width: 100%;
+      margin-left: auto;
+      display: block;
     }
-
     .signature-label {
       border-top: 1px solid #333;
       padding-top: 5px;
       font-size: 0.95rem;
       margin-top: 10px;
+      text-align: right;
+      width: 220px;
+      margin-left: auto;
+      display: block;
     }
-
     table th {
       background-color: #f8f9fa;
       font-weight: 600;
     }
-
     .total-row {
       background-color: #f8f9fa !important;
     }
-
     .note-area {
       font-size: 0.85rem;
       padding-top: 20px;
       border-top: 1px solid #eee;
       margin-top: 20px;
     }
-
     .no-border {
       border: none !important;
       background: transparent !important;
     }
-    /* for page breaking */
-    .page-break {
-     page-break-before: always;
-     break-before: always;
+    td input[type="number"], td:last-child input, .total-row td:nth-child(3) input {
+      text-align: right;
     }
-/* end */
-
-    @media print {
-      #addRowBtn, #downloadBtn, .removeRowBtn, .action-col, .signature-btn {
-        display: none !important;
-      }
-      .serial {
-        border: none !important;
-      }
-      .invoice-box {
-        box-shadow: none;
-        padding: 0;
-        min-height: auto;
-      }
-      body {
-        padding: 0;
-        background: none;
-      }
+    th:nth-child(3), .total-row td:nth-child(3) {
+      text-align: right;
     }
+    #grandTotal {
+      text-align: right !important;
+      font-weight: bold;
+      font-size: large;
+    }
+    .editable-message {
+      font-weight: bold;
+      line-height: 1.2;
+    }
+    .editable-message span {
+      font-weight: 900;
+      font-size: 1.2em;
+    }
+    .days-inputs input {
+      width: 60px;
+      display: inline-block;
+      margin-right: 4px;
+    }
+    html, body {
+  margin: 0;
+  padding: 0;
+}
   </style>
 </head>
 <body>
@@ -163,38 +267,47 @@
   </div>
 </div>
 
-<div class="invoice-box elegant-text" id="invoiceContent">
-  <!-- Header -->
-  <div class="d-flex justify-content-between align-items-start mb-4">
-    <div>
-      <img src="logo.png" class="logo">
-      <div class="serial-container"><strong>No:</strong> <input type="text" class="serial" placeholder="INV-001" id="serialField"></div>
+<div class="invoice-box" id="invoiceContent">
+  <!-- Header Section -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <img src="logo.png" class="logo">
+    <div class="flex-fill d-flex justify-content-end align-items-center ms-3" style="height: 100px;">
+      <div class="editable-message text-center" contenteditable="true"
+           style="line-height: 1.4; font-weight: bold; display: flex; flex-direction: column;
+                  justify-content: center; align-items: center; min-height: 100px; padding: 10px; font-size: 1.1em;">
+        CUSTOMER CARE <br>
+        <span style="font-weight: 900; font-size: 1.4em;">7010 4411</span>
+      </div>
     </div>
-    <textarea class="note-box" placeholder="Customer message..."></textarea>
   </div>
 
   <!-- Invoice Info -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h5><span class="badge bg-dark">CASH INVOICE</span></h5>
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+    <div class="d-flex align-items-center gap-2">
+      <strong>No:</strong>
+      <input type="text" class="serial" placeholder="INV-001" id="serialField">
+    </div>
+    <h5 class="text-center flex-fill text-dark m-0"><span class="badge bg-dark">CASH INVOICE</span></h5>
     <div class="d-flex align-items-center gap-2">
       <strong>Date:</strong>
-      <input type="text" id="invoiceDate" class="form-control form-control-sm w-auto" placeholder="DD-MM-YYYY">
+      <input type="text" id="invoiceDate" class="form-control w-auto" placeholder="DD-MM-YYYY">
     </div>
   </div>
 
   <!-- Customer Info -->
-  <div class="mb-3">
+  <div class="mb-3 d-flex align-items-center gap-2">
     <label><strong>Mr./Mrs:</strong></label>
-    <input type="text" class="form-control form-control-sm" placeholder="Customer name" id="customerName">
+    <input type="text" class="form-control w-50" placeholder="Customer name" id="customerName">
   </div>
-  <div class="row mb-4">
-    <div class="col-md-6">
+
+  <div class="mb-4 d-flex align-items-center gap-3 flex-wrap">
+    <div class="d-flex align-items-center gap-2">
       <label><strong>Mobile No:</strong></label>
-      <input type="text" class="form-control form-control-sm" placeholder="Mobile number">
+      <input type="text" class="form-control" placeholder="Mobile number" style="width: 150px;">
     </div>
-    <div class="col-md-6">
+    <div class="d-flex align-items-center gap-2">
       <label><strong>Villa No:</strong></label>
-      <input type="text" class="form-control form-control-sm" placeholder="Villa number">
+      <input type="text" class="form-control" placeholder="Villa number" style="width: 150px;">
     </div>
   </div>
 
@@ -205,49 +318,60 @@
         <th>Vehicle No</th>
         <th>Washing Days</th>
         <th>Amount</th>
-        <th class="action-col">Action</th>
+        <th class="non-print">Action</th>
       </tr>
     </thead>
     <tbody id="invoiceBody">
       <tr>
-        <td><input type="text" placeholder="type"></td>
-        <td><input type="text" placeholder="29thJanuary - 18thApril"></td>
+        <td><input type="text" placeholder="Vehicle No"></td>
+        <td>
+          <div class="days-inputs d-flex gap-1">
+            <input type="text" placeholder="Sun">
+            <input type="text" placeholder="Tue">
+            <input type="text" placeholder="Thu">
+          </div>
+        </td>
         <td><input type="number" class="row-total" value="0"></td>
-        <td class="action-col"><button class="btn btn-danger btn-sm removeRowBtn">Delete</button></td>
+        <td class="non-print"><button class="btn btn-danger btn-sm removeRowBtn non-print">Delete</button></td>
       </tr>
     </tbody>
     <tfoot>
       <tr class="fw-bold total-row">
         <td colspan="2" class="text-end">TOTAL</td>
-        <td><input type="text" id="grandTotal" class="form-control form-control-sm no-border" readonly></td>
-        <td class="action-col"></td>
+        <td><input type="text" id="grandTotal" class="form-control no-border" readonly></td>
+        <td class="non-print"></td>
       </tr>
     </tfoot>
   </table>
+  <!-- Remarks -->
+  <div class="mb-4 d-flex align-items-center gap-2">
+    <label for="remarks" style="font-weight: bold; white-space: nowrap;">Remarks:</label>
+    <input type="text" id="remarks" class="form-control" placeholder="Write remarks if any..." style="flex: 1;">
+  </div>
 
   <!-- Buttons -->
-  <div class="d-flex justify-content-between mt-4">
+  <div class="d-flex justify-content-between mt-4 non-print">
     <button class="btn btn-primary btn-sm" id="addRowBtn">Add Row</button>
     <button class="btn btn-success btn-sm signature-btn" id="downloadBtn">Download PDF</button>
   </div>
 
-  <!-- Signatures -->
-  <div class="signature-box">
-    <div class="signature-container" id="supervisorSignature">
-      <div class="signature-label">Supervisor Signature</div>
+  <!-- Signatures and Dates Row -->
+  <div class="signature-box" style="width: 100%;">
+    <div class="dates-col">
+      <div class="date-row">
+        <label for="startDate">Start Date:</label>
+        <input type="text" id="startDate" placeholder="DD-MM-YYYY">
+      </div>
+      <div class="date-row">
+        <label for="endDate">End Date:</label>
+        <input type="text" id="endDate" placeholder="DD-MM-YYYY">
+      </div>
     </div>
-    <div class="signature-container">
-      <div class="signature-label">Thank you</div>
+    <div class="signature-container" id="supervisorSignature">
+      <button class="btn btn-outline-primary btn-sm mb-2 non-print" data-bs-toggle="modal" data-bs-target="#signatureModal">Add Supervisor Signature</button>
     </div>
   </div>
 
-  <!-- page breakstartaa -->
-  <div class="page-break"></div>
-  <div class="html2pdf__page-break"></div>
-
-<!-- enda -->
-
-  <!-- Note -->
   <div class="note-area"><strong>NB:</strong> Vehicle interior cleaning should be done in customer's own risk and presence.</div>
 </div>
 
@@ -257,10 +381,9 @@
   const canvas = document.getElementById("signatureCanvas");
   const signatureModal = new bootstrap.Modal(document.getElementById("signatureModal"));
 
-  flatpickr("#invoiceDate", {
-    dateFormat: "d-m-Y",
-    defaultDate: new Date()
-  });
+  flatpickr("#invoiceDate", { dateFormat: "d-m-Y", defaultDate: new Date() });
+  flatpickr("#startDate", { dateFormat: "d-m-Y" });
+  flatpickr("#endDate", { dateFormat: "d-m-Y" });
 
   function calculateTotals() {
     let total = 0;
@@ -274,9 +397,15 @@
     const row = document.createElement("tr");
     row.innerHTML = `
       <td><input type="text" placeholder="Vehicle No"></td>
-      <td><input type="text" placeholder="Washing Days"></td>
+      <td>
+        <div class="days-inputs d-flex gap-1">
+          <input type="text" placeholder="Sun">
+          <input type="text" placeholder="Tue">
+          <input type="text" placeholder="Thu">
+        </div>
+      </td>
       <td><input type="number" class="row-total" value="0"></td>
-      <td class="action-col"><button class="btn btn-danger btn-sm removeRowBtn">Delete</button></td>
+      <td class="non-print"><button class="btn btn-danger btn-sm removeRowBtn non-print">Delete</button></td>
     `;
     document.getElementById("invoiceBody").appendChild(row);
     updateEvents();
@@ -293,16 +422,14 @@
       input.removeEventListener("input", calculateTotals);
       input.addEventListener("input", calculateTotals);
     });
-
     document.querySelectorAll(".removeRowBtn").forEach(btn => {
-      btn.removeEventListener("click", () => removeRow(btn));
-      btn.addEventListener("click", function() {
+      btn.addEventListener("click", function () {
         removeRow(this);
       });
     });
   }
 
-  document.getElementById('signatureModal').addEventListener('shown.bs.modal', function () {
+  document.getElementById("signatureModal").addEventListener("shown.bs.modal", function () {
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
     if (!signaturePad) {
@@ -315,107 +442,60 @@
     }
   });
 
-  document.getElementById("confirmSignature").addEventListener("click", function() {
+  document.getElementById("confirmSignature").addEventListener("click", () => {
     if (signaturePad.isEmpty()) {
-      alert("Please provide a signature first");
+      alert("Please provide a signature first.");
       return;
     }
-
-    const signatureData = signaturePad.toDataURL();
+    const dataUrl = signaturePad.toDataURL();
     const img = document.createElement("img");
-    img.src = signatureData;
-    img.className = "signature-img";
-
-    const signatureDiv = document.getElementById("supervisorSignature");
-    signatureDiv.innerHTML = "";
-    signatureDiv.appendChild(img);
-
-    const label = document.createElement("div");
-    label.textContent = "Supervisor Signature";
-    label.className = "signature-label";
-    signatureDiv.appendChild(label);
-
+    img.src = dataUrl;
+    img.classList.add("signature-img");
+    const container = document.getElementById("supervisorSignature");
+    container.classList.add('signature-right');
+    container.innerHTML = '';
+    container.appendChild(img);
+    container.insertAdjacentHTML('beforeend', '<div class="signature-label">Supervisor Signature</div>');
     signatureModal.hide();
-    generateFinalPDF();
   });
+  
 
-  document.getElementById("retrySignature").addEventListener("click", () => signaturePad.clear());
   document.getElementById("clearSignature").addEventListener("click", () => signaturePad.clear());
+  document.getElementById("retrySignature").addEventListener("click", () => signaturePad.clear());
+  document.getElementById("addRowBtn").addEventListener("click", () => addRow());
 
-  document.getElementById("addRowBtn").addEventListener("click", addRow);
-  document.getElementById("downloadBtn").addEventListener("click", () => signatureModal.show());
+  document.getElementById("downloadBtn").addEventListener("click", () => {
+    const invoice = document.getElementById("invoiceContent");
+    const clone = invoice.cloneNode(true);
+    clone.querySelectorAll('.non-print').forEach(el => el.remove());
+    clone.classList.add('pdf-export');
 
-  // function generateFinalPDF() {
-  //   const content = document.getElementById("invoiceContent");
-  //   const clone = content.cloneNode(true);
+    // add signature-right class in PDF export
+    const supervisorSignature = clone.querySelector("#supervisorSignature");
+    if (supervisorSignature) {
+      supervisorSignature.classList.add("signature-right");
+    }
 
-  //   // Clean up dynamic elements
-  //   clone.querySelectorAll(".action-col, .removeRowBtn, #addRowBtn, #downloadBtn, .signature-btn").forEach(el => el.remove());
+    // A4 size: 210mm x 297mm
+    const wrapper = document.createElement("div");
+wrapper.style.width = "210mm";
+wrapper.style.height = "297mm"; // Set height to A4 size
+wrapper.style.overflow = "hidden"; // Prevent overflow
+wrapper.style.boxSizing = "border-box";
+wrapper.appendChild(clone);
 
-  //   // Style inputs for PDF
-  //   clone.querySelectorAll("input, textarea").forEach(input => {
-  //     input.classList.add("no-border");
-  //     input.readOnly = true;
-  //   });
-
-  //   // Reset unnecessary margins
-  //   clone.querySelector(".invoice-box")?.style?.setProperty("min-height", "auto");
-
-  //   const opt = {
-  //     margin: 10,
-  //     filename: `Anona_Invoice_${(document.getElementById("customerName").value || "Customer").replace(/\s+/g, '_')}.pdf`,
-  //     html2canvas: {
-  //       scale: 2,
-  //       useCORS: true
-  //     },
-  //     jsPDF: {
-  //       unit: 'mm',
-  //       format: 'a4',
-  //       orientation: 'portrait'
-  //     },
-  //     pagebreak: { mode: ['avoid-all', 'css'] }
-  //   };
-
-  //   html2pdf().set(opt).from(clone).save();
-  // }
-  function generateFinalPDF() {
-  const content = document.getElementById("invoiceContent");
-  const clone = content.cloneNode(true);
-
-  // Clean up dynamic elements
-  clone.querySelectorAll(".action-col, .removeRowBtn, #addRowBtn, #downloadBtn, .signature-btn").forEach(el => el.remove());
-
-  // Style inputs for PDF
-  clone.querySelectorAll("input, textarea").forEach(input => {
-    input.classList.add("no-border");
-    input.readOnly = true;
+    const opt = {
+  margin: [0, 0, 0, 0], // Set all margins to 0
+  filename: 'invoice.pdf',
+  image: { type: 'jpeg', quality: 0.98 },
+  html2canvas: { scale: 2, useCORS: true, backgroundColor: "#fff" },
+  jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+};
+    html2pdf().set(opt).from(wrapper).save();
   });
-
-  // Reset unnecessary margins
-  clone.querySelector(".invoice-box")?.style?.setProperty("min-height", "auto");
-
-  const opt = {
-    margin: 10,
-    filename: `Anona_Invoice_${(document.getElementById("customerName").value || "Customer").replace(/\s+/g, '_')}.pdf`,
-    html2canvas: {
-      scale: 2,
-      useCORS: true
-    },
-    jsPDF: {
-      unit: 'mm',
-      format: 'a4',
-      orientation: 'portrait'
-    },
-    pagebreak: { mode: ['avoid-all', 'css'] }
-  };
-
-  html2pdf().set(opt).from(clone).save();
-}
-
 
   updateEvents();
   calculateTotals();
 </script>
-
 </body>
 </html>
