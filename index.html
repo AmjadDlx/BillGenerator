@@ -80,9 +80,9 @@
       min-width: 120px !important;
       min-height: 36px !important;
       height: 36px !important;
-      border: none !important; /* Removed borders for text fields */
+      border: none !important;
       background: transparent !important;
-      color: blue !important; /* Blue color for start/end dates */
+      color: blue !important;
       font-size: 1.1em !important;
       padding: 4px 12px !important;
       box-sizing: border-box !important;
@@ -101,37 +101,36 @@
     .pdf-export .note-area { margin-top: 16px !important; border-top: 1px solid #ddd !important; padding-top: 10px !important; font-size: 12px !important; color: #444 !important; }
     .pdf-export .non-print { display: none !important; }
     .pdf-export .editable-message {
-      font-size: 1.4em !important; /* Increased size for PDF */
+      font-size: 1.4em !important;
       font-weight: bold !important;
       line-height: 1.4 !important;
     }
     .pdf-export .editable-message span {
       font-weight: 900 !important;
-      font-size: 1.8em !important; /* Increased phone number size for PDF */
+      font-size: 1.8em !important;
     }
     .pdf-export input, .pdf-export .form-control, .pdf-export .serial {
-      border: none !important; /* Remove borders from all inputs in PDF */
+      border: none !important;
       background: transparent !important;
       font-size: 13px !important;
-      color: blue !important; /* Blue color for filling details */
+      color: blue !important;
     }
     .pdf-export #grandTotal {
-      color: black !important; /* Total amount in black */
+      color: black !important;
     }
     .pdf-export .invoice-box {
-      border: none !important; /* Remove any outer box */
+      border: none !important;
       box-shadow: none !important;
       padding: 0 !important;
     }
-    .pdf-export h5, .pdf-export .badge {
-      background: linear-gradient(135deg, #0d6efd, #13309a) !important; /* Eye-catching gradient for headers */
-      color: white !important;
-      padding: 8px 16px !important;
-      border-radius: 8px !important;
-    }
+
+    /* Single-layer black CASH INVOICE in PDF: remove h5 background, make only the .badge black */
+    .pdf-export h5 { background: transparent !important; padding: 0 !important; }
+    .pdf-export .badge { background: #000 !important; color: #fff !important; padding: 8px 16px !important; border-radius: 8px !important; }
+
     .pdf-export .note-area {
-      background: #f0f8ff !important; /* Light blue background for notes to make it eye-catching */
-      border: 1px solid #add8e6 !important;
+      background: #f0f8ff !important;
+      border: 1px solid #000000 !important;
       border-radius: 4px !important;
       padding: 12px !important;
     }
@@ -144,7 +143,7 @@
     }
     .pdf-export .invoice-date {
       margin-left: auto !important;
-      margin-right: 0 !important; /* At the right edge */
+      margin-right: 0 !important;
     }
 
     .logo {
@@ -156,7 +155,7 @@
       background: transparent;
       font-size: 1rem;
       min-width: 10px;
-      color: rgb(255, 0, 0); /* Changed to blue for filling details */
+      color: rgb(255, 0, 0);
       font-weight: bolder;
     }
     .note-box {
@@ -210,7 +209,7 @@
       border: 1.5px solid #bbb;
       border-radius: 6px;
       background: #fff;
-      color: blue; /* Blue color for dates */
+      color: blue;
       font-size: 1.1em;
       padding: 4px 12px;
       box-sizing: border-box;
@@ -255,7 +254,7 @@
       background: transparent !important;
     }
     td input[type="text"], td input[type="number"] {
-      color: blue; /* Blue color for table filling details */
+      color: blue;
     }
     td input[type="number"], td:last-child input, .total-row td:nth-child(3) input {
       text-align: right;
@@ -267,16 +266,16 @@
       text-align: right !important;
       font-weight: bold;
       font-size: large;
-      color: black !important; /* Total amount in black */
+      color: black !important;
     }
     .editable-message {
       font-weight: bold;
       line-height: 1.2;
-      font-size: 1.3em; /* Increased size for editable page */
+      font-size: 1.3em;
     }
     .editable-message span {
       font-weight: 900;
-      font-size: 1.6em; /* Increased phone number size for editable page */
+      font-size: 1.6em;
     }
     .days-inputs input {
       width: 60px;
@@ -288,10 +287,10 @@
       padding: 0;
     }
     input.form-control {
-      color: blue; /* Blue color for filling details in editable page */
+      color: blue;
     }
     .invoice-info {
-      gap: 10px; /* Small gap between elements */
+      gap: 10px;
     }
     .invoice-info h5 {
       flex-grow: 1;
@@ -299,7 +298,7 @@
     }
     .invoice-date {
       margin-left: auto;
-      margin-right: 0; /* Maximum right */
+      margin-right: 0;
     }
   </style>
 </head>
@@ -403,6 +402,7 @@
       </tr>
     </tfoot>
   </table>
+
   <!-- Remarks -->
   <div class="mb-4 d-flex align-items-center gap-2">
     <label for="remarks" style="font-weight: bold; white-space: nowrap;">Remarks:</label>
@@ -538,13 +538,13 @@
     // A4 size: 210mm x 297mm
     const wrapper = document.createElement("div");
     wrapper.style.width = "210mm";
-    wrapper.style.height = "297mm"; // Set height to A4 size
-    wrapper.style.overflow = "hidden"; // Prevent overflow
+    wrapper.style.height = "297mm";
+    wrapper.style.overflow = "hidden";
     wrapper.style.boxSizing = "border-box";
     wrapper.appendChild(clone);
 
     const opt = {
-      margin: [0, 0, 0, 0], // Set all margins to 0
+      margin: [0, 0, 0, 0],
       filename: 'invoice.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, backgroundColor: "#fff" },
