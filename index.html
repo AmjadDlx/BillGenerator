@@ -115,6 +115,9 @@
       font-size: 13px !important;
       color: blue !important;
     }
+    /* Make No field red only in PDF */
+    .pdf-export #serialField { color: red !important; }
+
     .pdf-export #grandTotal {
       color: black !important;
     }
@@ -124,7 +127,7 @@
       padding: 0 !important;
     }
 
-    /* Single-layer black CASH INVOICE in PDF: remove h5 background, make only the .badge black */
+    /* Single-layer black CASH INVOICE in PDF */
     .pdf-export h5 { background: transparent !important; padding: 0 !important; }
     .pdf-export .badge { background: #000 !important; color: #fff !important; padding: 8px 16px !important; border-radius: 8px !important; }
 
@@ -390,7 +393,7 @@
             <input type="text" placeholder="Thu">
           </div>
         </td>
-        <td><input type="number" class="row-total" value="0"></td>
+        <td><input type="number" class="row-total" value="0.00" step="0.01"></td>
         <td class="non-print"><button class="btn btn-danger btn-sm removeRowBtn non-print">Delete</button></td>
       </tr>
     </tbody>
@@ -453,6 +456,14 @@
     document.getElementById("grandTotal").value = total.toFixed(2);
   }
 
+  // Ensure row amount is always shown with 2 decimals on blur
+  function onRowBlur(e) {
+    const input = e.target;
+    const val = parseFloat(input.value);
+    input.value = isNaN(val) ? "0.00" : val.toFixed(2);
+    calculateTotals();
+  }
+
   function addRow() {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -464,7 +475,7 @@
           <input type="text" placeholder="Thu">
         </div>
       </td>
-      <td><input type="number" class="row-total" value="0"></td>
+      <td><input type="number" class="row-total" value="0.00" step="0.01"></td>
       <td class="non-print"><button class="btn btn-danger btn-sm removeRowBtn non-print">Delete</button></td>
     `;
     document.getElementById("invoiceBody").appendChild(row);
@@ -481,6 +492,8 @@
     document.querySelectorAll(".row-total").forEach(input => {
       input.removeEventListener("input", calculateTotals);
       input.addEventListener("input", calculateTotals);
+      input.removeEventListener("blur", onRowBlur);
+      input.addEventListener("blur", onRowBlur);
     });
     document.querySelectorAll(".removeRowBtn").forEach(btn => {
       btn.addEventListener("click", function () {
@@ -535,6 +548,12 @@
       supervisorSignature.classList.add("signature-right");
     }
 
+    // Format all row amounts to 2 decimals in the PDF clone
+    clone.querySelectorAll(".row-total").forEach(input => {
+      const val = parseFloat(input.value);
+      input.value = isNaN(val) ? "0.00" : val.toFixed(2);
+    });
+
     // A4 size: 210mm x 297mm
     const wrapper = document.createElement("div");
     wrapper.style.width = "210mm";
@@ -545,7 +564,7 @@
 
     const opt = {
       margin: [0, 0, 0, 0],
-      filename: 'invoice.pdf',
+      filename: 'Anona_Invoice.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, backgroundColor: "#fff" },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
